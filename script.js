@@ -22,4 +22,18 @@ class sermonBuilder {
     if (searchBtn)
       searchBtn.addEventListener("click", (e) => this.searchVerse(e));
   }
+  saveSermons(e) {
+    e.preventDefault();
+    console.log("Save clicked");
+  }
+
+  clearForm(e) {
+    e.preventDefault();
+    console.log("Clear clicked");
+  }
+
+  searchVerse(e) {
+    e.preventDefault();
+    console.log("Search clicked");
+  }
 }
