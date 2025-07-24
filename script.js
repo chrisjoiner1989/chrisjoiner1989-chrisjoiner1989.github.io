@@ -9,5 +9,17 @@ class sermonBuilder {
     // Sets up eventListeners when page loads
     this.bindEvents();
   }
-  bindEvents() {}
+  bindEvents() {
+    // gets HTML btn References
+    const saveBtn = document.querySelector(".save-btn");
+    const clearBtn = document.querySelector(".clear-btn");
+    const searchBtn = document.querySelector("search-btn");
+    const form = document.getElementById("sermon-form");
+
+    // adds click handlers
+    if (saveBtn) saveBtn.addEventListener("click", (e) => this.saveSermon(e));
+    if (clearBtn) clearBtn.addEventListener("click", (e) => this.clearForm(e));
+    if (searchBtn)
+      searchBtn.addEventListener("click", (e) => this.searchVerse(e));
+  }
 }
