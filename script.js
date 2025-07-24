@@ -22,7 +22,7 @@ class sermonBuilder {
     if (searchBtn)
       searchBtn.addEventListener("click", (e) => this.searchVerse(e));
   }
-  saveSermons(e) {
+  saveSermon(e) {
     e.preventDefault();
     console.log("Save clicked");
     const sermon = this.getFormData();
@@ -41,8 +41,41 @@ class sermonBuilder {
     console.log("Clear clicked");
   }
 
-  searchVerse(e) {
+  async searchVerse(e) {
     e.preventDefault();
+    const reference = document.getElementById("reference").value;
+    if (!reference.trim()) {
+      alert("Please enter a verse reference (e.g., John 3:16)");
+      return;
+    } // Show loading message
+    const verseDisplay = document.getElementById("verse-display");
+    verseDisplay.innerHTML = "<p>Loading verse...</p>";
+
+    try {
+      // Bible API call - free, no key required
+      const response = await fetch(
+        `https://bible-api.com/${encodeURIComponent(reference)}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Verse not found");
+      }
+
+      const data = await response.json();
+      verseDisplay.innerHTML = `
+              <div class="verse-result">
+                  <h4>${data.reference}</h4>
+                  <p class="verse-text">"${data.text}"</p>
+                  <small>Translation: ${data.translation_name}</small>
+              </div>
+          `;
+    } catch (error) {
+      verseDisplay.innerHTML = `
+              <p class="error">Could not find verse "${reference}". 
+              Please check spelling and try format like "John 3:16"</p>
+          `;
+    }
+
     console.log("Search clicked");
   }
 
@@ -52,9 +85,10 @@ class sermonBuilder {
       speaker: document.getElementById("speaker").value,
       title: document.getElementById("title").value,
       reference: document.getElementById("reference").value,
-      date: document.getElementById("series").value,
+      series: document.getElementById("series").value,
+      date: document.getElementById("date").value,
       notes: document.getElementById("notes").value,
-      id: date.now().toString(), // unique id
+      id: Date.now().toString(), // unique id
       createdAt: new Date().toISOString(), // Time stamp
     };
   }
@@ -72,6 +106,12 @@ class sermonBuilder {
   }
   loadSermons() {
     // Loads From localStorage
+    const stored = localStorage.getItem("sermonBuilder_sermons");
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  saveToStorage() {
+    // Saves to localStorage
     localStorage.setItem("sermonBuilder_sermons", JSON.stringify(this.sermons));
   }
 }
