@@ -3,44 +3,237 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mount Builder - Sermon Builder App</title>
+    <title>Mount Builder - Ministry Management for Pastors</title>
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
     <header>
-      <img src="" alt="" class="logo" />
+      <nav class="header-nav">
+        <img src="./assets/logo.png" alt="Mount Builder - Ministry Management for Pastors" class="logo" />
+        <div class="nav-tabs">
+          <button class="nav-tab active" data-section="sermons">Sermons</button>
+          <button class="nav-tab" data-section="library">Library</button>
+          <button class="nav-tab" data-section="calendar">Calendar</button>
+          <button class="nav-tab" data-section="study">Study Notes</button>
+        </div>
+      </nav>
     </header>
+    
     <main class="main-container">
-      <section class="form-container">
-        <form id="sermon-form">
-          <label for="speaker">Sermon Speaker:</label>
-          <input
-            type="text"
-            name="speaker"
-            id="speaker"
-            placeholder="Senior Pastor"
-          />
+      <div id="feedback" class="feedback-message" style="display: none;"></div>
+      
+      <!-- Sermons Section (Default Active) -->
+      <section id="sermons-section" class="content-section active">
+        <div class="section-header">
+          <h1>Create New Sermon</h1>
+          <div class="quick-actions">
+            <button class="quick-btn">📖 Recent Sermons</button>
+            <button class="quick-btn">📋 Templates</button>
+            <button class="quick-btn">📊 Series Planning</button>
+          </div>
+        </div>
+        
+        <div class="main-content">
+          <div class="form-container">
+            <form id="sermon-form">
+              <!-- Basic Information -->
+              <div class="form-section">
+                <h3>Basic Information</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="speaker">Speaker:</label>
+                    <select name="speaker" id="speaker">
+                      <option value="">Select Speaker</option>
+                      <option value="senior-pastor">Senior Pastor</option>
+                      <option value="associate-pastor">Associate Pastor</option>
+                      <option value="guest-speaker">Guest Speaker</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="date">Sermon Date:</label>
+                    <input type="date" name="date" id="date" />
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="title">Sermon Title:</label>
+                  <input type="text" name="title" id="title" placeholder="Enter sermon title" required />
+                </div>
+                
+                <div class="form-group">
+                  <label for="series">Sermon Series:</label>
+                  <input type="text" name="series" id="series" placeholder="e.g., 'Faith in Action' or leave blank for standalone" />
+                </div>
+              </div>
 
-          <label for="title">Sermon Title:</label>
-          <input type="text" id="title" placeholder="Sermon Title" required />
+              <!-- Scripture Section -->
+              <div class="form-section">
+                <h3>Scripture & Text</h3>
+                <div class="form-row">
+                  <div class="form-group flex-2">
+                    <label for="reference">Primary Scripture:</label>
+                    <input type="text" name="reference" id="reference" placeholder="e.g., John 3:16-21" />
+                  </div>
+                  <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button type="button" class="input-btn scripture-btn">🔍 Lookup Scripture</button>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="additional-passages">Additional Passages:</label>
+                  <textarea name="additional-passages" id="additional-passages" rows="2" placeholder="List any supporting scriptures (one per line)"></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label for="scripture-version">Bible Version:</label>
+                  <select name="scripture-version" id="scripture-version">
+                    <option value="ESV">ESV</option>
+                    <option value="NIV">NIV</option>
+                    <option value="NASB">NASB</option>
+                    <option value="KJV">KJV</option>
+                    <option value="NKJV">NKJV</option>
+                  </select>
+                </div>
+              </div>
 
-          <label for="reference">Verse Reference:</label>
-          <input type="text" id="reference" placeholder="e.g John 3:16" />
-          <button class="input-btn">Search verse</button>
+              <!-- Sermon Content -->
+              <div class="form-section">
+                <h3>Sermon Structure</h3>
+                <div class="form-group">
+                  <label for="theme">Main Theme/Big Idea:</label>
+                  <input type="text" name="theme" id="theme" placeholder="What is the central message?" />
+                </div>
+                
+                <div class="form-group">
+                  <label for="outline">Sermon Outline:</label>
+                  <textarea name="outline" id="outline" rows="6" placeholder="I. Introduction&#10;II. Main Point 1&#10;III. Main Point 2&#10;IV. Conclusion"></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label for="notes">Sermon Notes & Research:</label>
+                  <textarea name="notes" id="notes" rows="8" placeholder="Add your research, illustrations, quotes, and detailed notes here..."></textarea>
+                </div>
+              </div>
 
-          <label for="date">Sermon Date:</label>
-          <input type="date" id="date" />
-
-          <label for="series">Sermon series:</label>
-          <input type="text" id="series" placeholder="Sermon on the mount" />
-
-          <label for="notes">Sermon notes:</label>
-          <textarea name="notes" id="notes" rows="8"></textarea>
-        </form>
-        <button class="input-btn">Save Sermon</button>
-        <button class="input-btn">Clear</button>
+              <!-- Ministry Context -->
+              <div class="form-section">
+                <h3>Ministry Context</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="service-type">Service Type:</label>
+                    <select name="service-type" id="service-type">
+                      <option value="sunday-morning">Sunday Morning</option>
+                      <option value="sunday-evening">Sunday Evening</option>
+                      <option value="wednesday">Wednesday Night</option>
+                      <option value="special-event">Special Event</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="audience">Target Audience:</label>
+                    <select name="audience" id="audience">
+                      <option value="general">General Congregation</option>
+                      <option value="youth">Youth</option>
+                      <option value="adults">Adults</option>
+                      <option value="seniors">Seniors</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="tags">Tags:</label>
+                  <input type="text" name="tags" id="tags" placeholder="e.g., faith, prayer, discipleship (comma separated)" />
+                </div>
+              </div>
+              
+              <div class="form-actions">
+                <button type="submit" class="input-btn primary">💾 Save Sermon</button>
+                <button type="button" class="input-btn secondary">📤 Save & Schedule</button>
+                <button type="reset" class="input-btn outline">🗑️ Clear Form</button>
+              </div>
+            </form>
+          </div>
+          
+          <!-- Sidebar for Desktop -->
+          <div class="sidebar">
+            <div class="sidebar-section">
+              <h4>📚 Quick Resources</h4>
+              <div class="resource-links">
+                <a href="#" class="resource-link">Commentary Notes</a>
+                <a href="#" class="resource-link">Illustration Bank</a>
+                <a href="#" class="resource-link">Hymn Suggestions</a>
+              </div>
+            </div>
+            
+            <div class="sidebar-section">
+              <h4>📅 Upcoming Dates</h4>
+              <div class="upcoming-list">
+                <div class="upcoming-item">
+                  <span class="date">Dec 24</span>
+                  <span class="event">Christmas Eve</span>
+                </div>
+                <div class="upcoming-item">
+                  <span class="date">Dec 31</span>
+                  <span class="event">New Year's Eve</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="sidebar-section">
+              <h4>🎯 This Week</h4>
+              <div class="week-stats">
+                <div class="stat">
+                  <span class="number">3</span>
+                  <span class="label">Sermons Prepared</span>
+                </div>
+                <div class="stat">
+                  <span class="number">12</span>
+                  <span class="label">Hours Studied</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Library Section (Hidden by default) -->
+      <section id="library-section" class="content-section">
+        <div class="section-header">
+          <h1>Sermon Library</h1>
+          <div class="search-bar">
+            <input type="search" placeholder="Search sermons, series, or scripture..." />
+            <button class="search-btn">🔍</button>
+          </div>
+        </div>
+        <div class="coming-soon">
+          <h3>📚 Coming Soon</h3>
+          <p>Your complete sermon library with search, filtering, and organization tools.</p>
+        </div>
+      </section>
+      
+      <!-- Calendar Section (Hidden by default) -->
+      <section id="calendar-section" class="content-section">
+        <div class="section-header">
+          <h1>Ministry Calendar</h1>
+        </div>
+        <div class="coming-soon">
+          <h3>📅 Coming Soon</h3>
+          <p>Plan your sermon series, track church events, and coordinate with your ministry team.</p>
+        </div>
+      </section>
+      
+      <!-- Study Notes Section (Hidden by default) -->
+      <section id="study-notes-section" class="content-section">
+        <div class="section-header">
+          <h1>Study Notes</h1>
+        </div>
+        <div class="coming-soon">
+          <h3>📝 Coming Soon</h3>
+          <p>Your personal theology library with research notes, cross-references, and study materials.</p>
+        </div>
       </section>
     </main>
+    
     <script src="script.js"></script>
   </body>
 </html>
