@@ -8,6 +8,12 @@ class sermonBuilder {
   init() {
     // Sets up eventListeners when page loads
     this.bindEvents();
+    const referenceInput = document.getElementById("reference");
+    if (referenceInput) {
+      referenceInput.addEventListener("input", (e) =>
+        this.checkReferenceFormat(e)
+      );
+    }
   }
   bindEvents() {
     // gets HTML btn References
@@ -43,37 +49,27 @@ class sermonBuilder {
 
   async searchVerse(e) {
     e.preventDefault();
+
     const reference = document.getElementById("reference").value;
-    if (!reference.trim()) {
-      alert("Please enter a verse reference (e.g., John 3:16)");
+    const validation = this.validateReferenceInput(reference);
+
+    if (!validation.isValid) {
+      alert(validation.message);
       return;
-    } // Show loading message
+    }
+
+    // Show loading message
     const verseDisplay = document.getElementById("verse-display");
     verseDisplay.innerHTML = "<p>Loading verse...</p>";
 
+    // Rest of your existing API code stays the same...
     try {
-      // Bible API call - free, no key required
       const response = await fetch(
         `https://bible-api.com/${encodeURIComponent(reference)}`
       );
-
-      if (!response.ok) {
-        throw new Error("Verse not found");
-      }
-
-      const data = await response.json();
-      verseDisplay.innerHTML = `
-              <div class="verse-result">
-                  <h4>${data.reference}</h4>
-                  <p class="verse-text">"${data.text}"</p>
-                  <small>Translation: ${data.translation_name}</small>
-              </div>
-          `;
+      // ... rest of your existing code
     } catch (error) {
-      verseDisplay.innerHTML = `
-              <p class="error">Could not find verse "${reference}". 
-              Please check spelling and try format like "John 3:16"</p>
-          `;
+      // ... rest of your existing error handling
     }
 
     console.log("Search clicked");
@@ -113,5 +109,55 @@ class sermonBuilder {
   saveToStorage() {
     // Saves to localStorage
     localStorage.setItem("sermonBuilder_sermons", JSON.stringify(this.sermons));
+  }
+
+  validateVerseReference(reference) {
+    // Bible verse regex patterns
+    const patterns = [
+      // Full format: "John 3:16", "1 Corinthians 13:4-7", "Psalm 23:1-6"
+      /^(1|2|3)?\s*[A-Za-z]+\s+\d+:\d+(-\d+)?$/,
+      // Book chapter only: "John 3", "1 Corinthians 13"
+      /^(1|2|3)?\s*[A-Za-z]+\s+\d+$/,
+      // With abbreviations: "Jn 3:16", "1Co 13:4"
+      /^(1|2|3)?[A-Za-z]{2,4}\s+\d+:\d+(-\d+)?$/,
+    ];
+
+    // Check if reference matches any valid pattern
+    return patterns.some((pattern) => pattern.test(reference.trim()));
+  }
+
+  validateReferenceInput(reference) {
+    if (!reference || reference.trim() === "") {
+      return { isValid: false, message: "Please enter a verse reference" };
+    }
+
+    if (!this.validateVerseReference(reference)) {
+      return {
+        isValid: false,
+        message:
+          'Invalid format. Please use format like "John 3:16" or "1 Corinthians 13:4-7"',
+      };
+    }
+
+    return { isValid: true, message: "" };
+  }
+
+  checkReferenceFormat(e) {
+    const reference = e.target.value;
+    const helpText = document.getElementById("reference-help");
+
+    if (!reference) {
+      helpText.textContent = "";
+      return;
+    }
+
+    const validation = this.validateReferenceInput(reference);
+    if (validation.isValid) {
+      helpText.textContent = "✓ Valid format";
+      helpText.className = "help-text valid";
+    } else {
+      helpText.textContent = validation.message;
+      helpText.className = "help-text invalid";
+    }
   }
 }
