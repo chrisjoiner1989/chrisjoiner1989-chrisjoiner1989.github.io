@@ -62,14 +62,33 @@ class sermonBuilder {
     const verseDisplay = document.getElementById("verse-display");
     verseDisplay.innerHTML = "<p>Loading verse...</p>";
 
-    // Rest of your existing API code stays the same...
     try {
       const response = await fetch(
         `https://bible-api.com/${encodeURIComponent(reference)}`
       );
-      // ... rest of your existing code
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.error) {
+        verseDisplay.innerHTML = `<p class="error">Error: ${data.error}</p>`;
+        return;
+      }
+      
+      // Display the verse
+      verseDisplay.innerHTML = `
+        <div class="verse-result">
+          <h3>${data.reference}</h3>
+          <p class="verse-text">${data.text}</p>
+          <p class="verse-info">Translation: ${data.translation_name || 'King James Version'}</p>
+        </div>
+      `;
     } catch (error) {
-      // ... rest of your existing error handling
+      console.error('Error fetching verse:', error);
+      verseDisplay.innerHTML = `<p class="error">Failed to load verse. Please check your connection and try again.</p>`;
     }
 
     console.log("Search clicked");
@@ -161,3 +180,8 @@ class sermonBuilder {
     }
   }
 }
+
+// Initialize the sermon builder when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+  new sermonBuilder();
+});
