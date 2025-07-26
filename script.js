@@ -17,6 +17,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   saveBtn.addEventListener("click", function (e) {
     e.preventDefault();
+    const sermonData = {
+      speaker: speakerInput.value,
+      title: titleInput.value,
+      reference: referenceInput.value,
+      date: dateInput.value,
+      series: seriesInput.value,
+      notes: notesInput.value,
+    };
+
+    if (!sermonData.title) {
+      alert("Title is required");
+      return;
+    }
+    console.log("sermon saved:", sermonData);
   });
 
   clearBtn.addEventListener("click", function (e) {
@@ -24,6 +38,10 @@ document.addEventListener("DOMContentLoaded", function () {
     speakerInput.value = "";
     titleInput.value = "";
     referenceInput.value = "";
+    dateInput.value = "";
+    seriesInput.value = "";
+    notesInput.value = "";
+    verseDisplay.innerHTML = "";
   });
 
   searchBtn.addEventListener("click", function (e) {
