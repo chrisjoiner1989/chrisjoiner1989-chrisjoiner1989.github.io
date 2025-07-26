@@ -31,6 +31,11 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
     console.log("sermon saved:", sermonData);
+
+    let savedSermons = JSON.parse(localStorage.getItem("sermons")) || [];
+    savedSermons.push(sermonData);
+    localStorage.setItem("sermons", JSON.stringify(savedSermons));
+    alert("Sermon saved successfully");
   });
 
   clearBtn.addEventListener("click", function (e) {
@@ -46,5 +51,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   searchBtn.addEventListener("click", function (e) {
     e.preventDefault();
+
+    const reference = referenceInput.value.trim();
+
+    if (!reference) {
+      alert("Please enter a verse reference");
+      return;
+    }
+
+    // API call
+    verseDisplay.innerHTML = "Searching...";
+    
+    fetch(`https://bible-api.com/${reference}`)
+      .then(response => response.json())
+      .then(data => {
+        verseDisplay.innerHTML = data.text;
+      })
+      .catch(error => {
+        verseDisplay.innerHTML = 'Error finding verse. Please check the reference.';
+      });
   });
 });
