@@ -14,4 +14,19 @@ document.addEventListener("DOMContentLoaded", function () {
   const saveBtn = document.querySelector(".save-btn");
   const clearBtn = document.querySelector(".clear-btn");
   const searchBtn = document.querySelector(".search-btn");
+
+  saveBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+  });
+
+  clearBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    speakerInput.value = "";
+    titleInput.value = "";
+    referenceInput.value = "";
+  });
+
+  searchBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+  });
 });
